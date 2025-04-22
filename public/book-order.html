@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Book Courier Order</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+  <div class="container mt-5">
+    <h2 class="text-center mb-4">Courier Order Booking</h2>
+    <form id="orderForm" action="/book-order" method="POST">
+      
+      <!-- Customer ID (Hidden Field) -->
+      <div class="mb-3">
+        <label for="customerId" class="form-label">Customer ID</label>
+        <input type="text" name="customerId" id="customerId" class="form-control" value="2002" readonly>
+      </div>
+
+      <!-- Date of Order -->
+      <div class="mb-3">
+        <label for="orderDate" class="form-label">Date Of Order (DD-MMM-YYYY)</label>
+        <input type="text" name="orderDate" id="orderDate" class="form-control" value="10-Jul-2022" placeholder="DD-MMM-YYYY" required pattern="\d{2}-[A-Za-z]{3}-\d{4}" title="Enter the date in DD-MMM-YYYY format">
+      </div>
+
+      <!-- Sender Name -->
+      <div class="mb-3">
+        <label for="senderName" class="form-label">Sender Name</label>
+        <input type="text" name="senderName" id="senderName" class="form-control" placeholder="Sender Name" required>
+      </div>
+
+      <!-- Sender Address -->
+      <div class="mb-3">
+        <label for="senderAddress" class="form-label">Sender Address</label>
+        <input type="text" name="senderAddress" id="senderAddress" class="form-control" placeholder="Sender Address" required>
+      </div>
+
+      <!-- Recipient Name -->
+      <div class="mb-3">
+        <label for="recipientName" class="form-label">Recipient Name</label>
+        <input type="text" name="recipientName" id="recipientName" class="form-control" placeholder="Recipient Name" required>
+      </div>
+
+      <!-- Recipient Address -->
+      <div class="mb-3">
+        <label for="recipientAddress" class="form-label">Recipient Address</label>
+        <input type="text" name="recipientAddress" id="recipientAddress" class="form-control" placeholder="Recipient Address" required>
+      </div>
+
+      <!-- Recipient City (D, P, B, C) -->
+      <div class="mb-3">
+        <label for="recipientCity" class="form-label">Recipient City (D, P, B, C)</label>
+        <input type="text" name="recipientCity" id="recipientCity" class="form-control" placeholder="D" required pattern="[DPCB]{1}" title="Only the letters D, P, B, or C are allowed">
+      </div>
+
+      <!-- Courier Weight -->
+      <div class="mb-3">
+        <label for="weight" class="form-label">Courier Weight (kg)</label>
+        <input type="number" name="weight" id="weight" class="form-control" placeholder="Weight in kg" step="0.1" required min="0.1" title="Enter a weight greater than 0">
+      </div>
+
+      <!-- Description -->
+      <div class="mb-3">
+        <label for="description" class="form-label">Description</label>
+        <input type="text" name="description" id="description" class="form-control" placeholder="Envelope" required>
+      </div>
+
+      <!-- Submit Button -->
+      <div class="d-grid gap-2">
+        <button type="submit" class="btn btn-primary">Book Order</button>
+      </div>
+    </form>
+  </div>
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+    document.getElementById('orderForm').addEventListener('submit', async (e) => {
+      e.preventDefault(); 
+
+      if (document.getElementById('orderForm').checkValidity()) {
+        const formData = Object.fromEntries(new FormData(e.target));
+
+        try {
+          const res = await fetch('/book-order', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(formData)
+          });
+
+          const data = await res.json();
+          alert(data.message || data.error || 'Unknown error');
+        } catch (err) {
+          alert('Network error: ' + err.message);
+        }
+      } else {
+        alert("Please fill out the form correctly.");
+      }
+    });
+  </script>
+</body>
+</html>
